@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Searchbar, ActivityIndicator } from "react-native-paper";
 import { SafeAreaView, StatusBar, FlatList, View, Text } from "react-native";
 import styled from "styled-components";
@@ -19,18 +19,18 @@ const Search = styled(Searchbar)`
 `;
 
 export const BooksScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("harry potter");
+  const [searchQuery, setSearchQuery] = useState("");
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const apiKey = "AIzaSyBX2LUFtftBg47PV1rnNrsZhIzmBAwEj58";
+  const apiKey = useRef(process.env.EXPO_PUBLIC_API_KEY);
 
   const search = async (page = 0) => {
     setLoading(true);
     const formattedQuery = searchQuery.toLowerCase().replace(/ /g, "+");
     fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${formattedQuery}&key=${apiKey}&startIndex=${
+      `https://www.googleapis.com/books/v1/volumes?q=${formattedQuery}&startIndex=${
         page * 10
       }&maxResults=10`
     )
@@ -38,6 +38,7 @@ export const BooksScreen = () => {
       .then((data) => {
         setBooks((prevBooks) => [...prevBooks, ...(data.items || [])]);
         setLoading(false);
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -46,9 +47,9 @@ export const BooksScreen = () => {
   };
 
   useEffect(() => {
-    setBooks([]); // Clear books when search query changes
+    searchQuery && setBooks([]); // Clear books when search query changes
     setPage(0); // Reset page to 0
-    search(0); // Fetch first page
+    searchQuery && search(0); // Fetch first page
     console.log(searchQuery);
   }, [searchQuery]);
 

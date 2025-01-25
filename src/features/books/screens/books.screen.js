@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { Searchbar, ActivityIndicator } from "react-native-paper";
 import { SafeAreaView, StatusBar, FlatList, View, Text } from "react-native";
 import styled from "styled-components";
 import { BookCard } from "../components/book.component";
+import { BooksContext } from "../../../services/books.context";
 
 const BooksContainer = styled(SafeAreaView)`
   flex: 1;
@@ -20,44 +21,19 @@ const Search = styled(Searchbar)`
 
 export const BooksScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [books, setBooks] = useState([]);
+  // const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+
+  const { books, loading, clear, search } = useContext(BooksContext);
 
   const apiKey = useRef(process.env.EXPO_PUBLIC_API_KEY);
-
-  const search = async (page = 0) => {
-    setLoading(true);
-    const formattedQuery = searchQuery.toLowerCase().replace(/ /g, "+");
-    fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${formattedQuery}&startIndex=${
-        page * 10
-      }&maxResults=10`
-    )
-      .then((r) => r.json())
-      .then((data) => {
-        setBooks((prevBooks) => [...prevBooks, ...(data.items || [])]);
-        setLoading(false);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    searchQuery && setBooks([]); // Clear books when search query changes
-    setPage(0); // Reset page to 0
-    searchQuery && search(0); // Fetch first page
-    console.log(searchQuery);
-  }, [searchQuery]);
 
   const loadMore = () => {
     if (!loading) {
       const nextPage = page + 1;
       setPage(nextPage);
-      search(nextPage);
+      search(nextPage, searchQuery);
     }
   };
 
@@ -66,6 +42,16 @@ export const BooksScreen = () => {
       <Search
         placeholder="Search"
         onChangeText={setSearchQuery}
+        onSubmitEditing={() => {
+          if (searchQuery) {
+            clear();
+            setPage(0);
+            search(0, searchQuery);
+          }
+        }}
+        onClearIconPress={() => {
+          setSearchQuery(searchQuery);
+        }}
         value={searchQuery}
       />
       {books && (
@@ -82,7 +68,7 @@ export const BooksScreen = () => {
                         "http://",
                         "https://"
                       )
-                    : null
+                    : "https://picsum.photos/700"
                 }
               />
             </ItemContainer>

@@ -1,6 +1,6 @@
 import { Card, Text, Button, Avatar } from "react-native-paper";
 import styled from "styled-components";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
@@ -16,12 +16,14 @@ export const BookCard = ({ thumbnail }) => {
 
   return (
     <CardView>
-      {thumbnail && (
-        <Image
-          style={{ width: "100%", height: "100%", borderRadius: 10 }}
-          source={{ uri: thumbnail }}
-        />
-      )}
+      <TouchableOpacity>
+        {thumbnail && (
+          <Image
+            style={{ width: "100%", height: "100%", borderRadius: 10 }}
+            source={{ uri: thumbnail }}
+          />
+        )}
+      </TouchableOpacity>
     </CardView>
   );
 };

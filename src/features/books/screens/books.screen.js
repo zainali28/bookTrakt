@@ -8,6 +8,7 @@ import { BooksContext } from "../../../services/books.context";
 const BooksContainer = styled(SafeAreaView)`
   flex: 1;
   margin-bottom: 10px;
+  background-color: white;
 `;
 
 const ItemContainer = styled(View)`
@@ -19,7 +20,7 @@ const Search = styled(Searchbar)`
   margin: 8px;
 `;
 
-export const BooksScreen = () => {
+export const BooksScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   // const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
@@ -61,6 +62,7 @@ export const BooksScreen = () => {
           renderItem={({ item }) => (
             <ItemContainer>
               <BookCard
+                onPress={() => navigation.navigate("BookInfo", { book: item })}
                 key={`${item.id}-${item.etag}`}
                 thumbnail={
                   item.volumeInfo.imageLinks?.thumbnail

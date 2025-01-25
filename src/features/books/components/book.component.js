@@ -11,12 +11,12 @@ const CardView = styled(Card)`
   border-radius: 10px;
 `;
 
-export const BookCard = ({ thumbnail }) => {
+export const BookCard = ({ thumbnail, onPress }) => {
   //   console.log(thumbnail);
 
   return (
     <CardView>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onPress}>
         {thumbnail && (
           <Image
             style={{ width: "100%", height: "100%", borderRadius: 10 }}

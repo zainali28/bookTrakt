@@ -8,7 +8,11 @@ export const BooksNavigator = () => {
   return (
     <BooksStack.Navigator screenOptions={{ headerShown: false }}>
       <BooksStack.Screen name="BookList" component={BooksScreen} />
-      <BooksStack.Screen name="BookInfo" component={BookInfoScreen} />
+      <BooksStack.Screen
+        headerShown={true}
+        name="BookInfo"
+        component={BookInfoScreen}
+      />
     </BooksStack.Navigator>
   );
 };

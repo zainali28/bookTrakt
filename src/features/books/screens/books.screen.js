@@ -115,7 +115,6 @@ export const BooksScreen = ({ navigation }) => {
       >
         {!present ? "Added to library!" : "Already in library!"}
       </Snackbar>
-      <StatusBar style="auto" />
     </BooksContainer>
   );
 };

@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Image, TouchableOpacity } from "react-native";
 import styled from "styled-components";
-import { Text, TouchableRipple } from "react-native-paper";
+import { Text, TouchableRipple, Chip } from "react-native-paper";
 import { SafeAreaView, ScrollView } from "react-native";
+import { LibraryContext } from "../../../services/library/library.context";
 
 const InfoContainer = styled(SafeAreaView)`
   background-color: white;
@@ -68,11 +68,13 @@ export const BookInfoScreen = ({ route }) => {
     },
   } = route.params;
 
+  const { add, remove, isPresent } = useContext(LibraryContext);
+
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
-  const shouldShowToggle = description.length > 130; // Adjust the length as needed
+  const shouldShowToggle = description?.length > 130; // Adjust the length as needed
 
   return (
     <InfoContainer>
@@ -89,15 +91,30 @@ export const BookInfoScreen = ({ route }) => {
         <BookInfo>
           <Title>{title}</Title>
           <LabelHead>Authors:</LabelHead>
-          {authors.map((v, i) => (
-            <Label key={`${i}-${id}`}>{v}</Label>
-          ))}
+          {authors &&
+            authors.map((v, i) => <Label key={`${i}-${id}`}>{v}</Label>)}
           <LabelHead>Publisher:</LabelHead>
           <Label>{publisher}</Label>
           <LabelHead>Published Date:</LabelHead>
           <Label>{publishedDate}</Label>
         </BookInfo>
       </DetailsContainer>
+      <Chip
+        icon={"library"}
+        showSelectedOverlay={true}
+        selected={isPresent(route.params)}
+        style={{
+          justifyContent: "center",
+          height: 40,
+          width: 120,
+          margin: 10,
+        }}
+        onPress={() => {
+          isPresent(route.params) ? remove(route.params) : add(route.params);
+        }}
+      >
+        Library
+      </Chip>
       <MainBody>
         <LabelHead>Description:</LabelHead>
         <TouchableRipple onPress={toggleDescription}>

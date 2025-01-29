@@ -17,9 +17,22 @@ export const LibraryContextProvider = ({ children }) => {
     setLibrary(library.filter((item) => item.id != id));
   };
 
+  const isPresent = ({ book: { id } }) => {
+    if (library.filter((item) => item.id === id).length !== 0) return true;
+  };
+
   return (
     <LibraryContext.Provider
-      value={{ library, add, remove, visible, setVisible, present, setPresent }}
+      value={{
+        library,
+        add,
+        remove,
+        visible,
+        setVisible,
+        present,
+        setPresent,
+        isPresent,
+      }}
     >
       {children}
     </LibraryContext.Provider>

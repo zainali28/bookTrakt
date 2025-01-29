@@ -58,7 +58,6 @@ export const LibraryScreen = ({ navigation }) => {
           //   }
         />
       )}
-      <StatusBar style="auto" />
     </BooksContainer>
   );
 };

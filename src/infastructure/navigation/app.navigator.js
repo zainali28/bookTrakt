@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BooksScreen } from "../../features/books/screens/books.screen";
 import { Ionicons } from "@expo/vector-icons";
 import { BooksNavigator } from "./books.navigator";
+import { LibraryNavigator } from "../library.navigation";
 
 const AppTab = createBottomTabNavigator();
 
@@ -30,7 +30,7 @@ export const AppNavigator = () => {
     <AppTab.Navigator screenOptions={createScreenOptions}>
       <AppTab.Screen name="Home" component={BooksNavigator} />
       <AppTab.Screen name="Discover" component={() => null} />
-      <AppTab.Screen name="Library" component={() => null} />
+      <AppTab.Screen name="Library" component={LibraryNavigator} />
       <AppTab.Screen name="Settings" component={() => null} />
     </AppTab.Navigator>
   );

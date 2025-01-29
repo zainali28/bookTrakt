@@ -1,18 +1,19 @@
-import { useEffect, useState, useRef, useContext } from "react";
-import { Searchbar, ActivityIndicator } from "react-native-paper";
+import { useState, useRef, useContext } from "react";
+import { Searchbar, ActivityIndicator, Snackbar } from "react-native-paper";
 import { SafeAreaView, StatusBar, FlatList, View, Text } from "react-native";
 import styled from "styled-components";
 import { BookCard } from "../components/book.component";
-import { BooksContext } from "../../../services/books.context";
+import { BooksContext } from "../../../services/books/books.context";
+import { LibraryContext } from "../../../services/library/library.context";
 
 const BooksContainer = styled(SafeAreaView)`
   flex: 1;
-  margin-bottom: 10px;
   background-color: white;
 `;
 
 const ItemContainer = styled(View)`
-  flex: 1;
+  height: 200px;
+  width: 120px;
   margin: 5px;
 `;
 
@@ -21,12 +22,15 @@ const Search = styled(Searchbar)`
 `;
 
 export const BooksScreen = ({ navigation }) => {
+  const [lastAdd, setLastAdd] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   // const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
   // const [loading, setLoading] = useState(false);
 
   const { books, loading, clear, search } = useContext(BooksContext);
+  const { add, library, visible, setVisible, present, setPresent, remove } =
+    useContext(LibraryContext);
 
   const apiKey = useRef(process.env.EXPO_PUBLIC_API_KEY);
 
@@ -63,6 +67,11 @@ export const BooksScreen = ({ navigation }) => {
             <ItemContainer>
               <BookCard
                 onPress={() => navigation.navigate("BookInfo", { book: item })}
+                onHold={() => {
+                  add({ book: item });
+                  setVisible(true);
+                  setLastAdd({ book: item });
+                }}
                 key={`${item.id}-${item.etag}`}
                 thumbnail={
                   item.volumeInfo.imageLinks?.thumbnail
@@ -85,6 +94,27 @@ export const BooksScreen = ({ navigation }) => {
           }
         />
       )}
+      <Snackbar
+        visible={visible}
+        onDismiss={() => {
+          setVisible(false);
+          setPresent(false);
+        }}
+        action={
+          !present
+            ? {
+                label: "Undo",
+                onPress: () => {
+                  // console.log(lastAdd);
+                  lastAdd && remove(lastAdd);
+                },
+              }
+            : null
+        }
+        duration={2000}
+      >
+        {!present ? "Added to library!" : "Already in library!"}
+      </Snackbar>
       <StatusBar style="auto" />
     </BooksContainer>
   );

@@ -1,10 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { fetch } from "expo/fetch";
-import { BooksScreen } from "./src/features/books/screens/books.screen";
 import styled from "styled-components";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BooksContextProvider } from "./src/services/books.context";
+import { BooksContextProvider } from "./src/services/books/books.context";
+import { LibraryContextProvider } from "./src/services/library/library.context";
 import { Navigator } from "./src/infastructure/navigation";
 
 const Container = styled(SafeAreaView)`
@@ -15,7 +13,9 @@ export const App = () => {
   return (
     <Container>
       <BooksContextProvider>
-        <Navigator />
+        <LibraryContextProvider>
+          <Navigator />
+        </LibraryContextProvider>
       </BooksContextProvider>
       <StatusBar style="auto" />
     </Container>

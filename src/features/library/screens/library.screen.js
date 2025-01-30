@@ -1,11 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { LibraryContext } from "../../../services/library/library.context";
 import styled from "styled-components";
 import { BookCard } from "../../books/components/book.component";
 import { ActivityIndicator } from "react-native-paper";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View, useWindowDimensions } from "react-native";
 import { StatusBar } from "react-native";
 import { FlatList } from "react-native";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 const BooksContainer = styled(SafeAreaView)`
   flex: 1;
@@ -18,9 +19,7 @@ const ItemContainer = styled.View`
   margin: 5px;
 `;
 
-export const LibraryScreen = ({ navigation }) => {
-  const { library } = useContext(LibraryContext);
-
+const Library = ({ library, navigation }) => {
   return (
     <BooksContainer>
       {library && (
@@ -58,6 +57,57 @@ export const LibraryScreen = ({ navigation }) => {
           //   }
         />
       )}
+    </BooksContainer>
+  );
+};
+
+const SecondRoute = () => (
+  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
+);
+
+export const LibraryScreen = ({ navigation }) => {
+  const { library } = useContext(LibraryContext);
+
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+
+  const routes = [
+    { key: "first", title: "All" },
+    { key: "second", title: "Reading" },
+    { key: "third", title: "Completed" },
+    { key: "fourth", title: "On Hold" },
+    { key: "fifth", title: "Dropped" },
+    { key: "sixth", title: "Plan to Read" },
+  ];
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case "first":
+        return <Library navigation={navigation} library={library} />;
+      case "second":
+        return <SecondRoute />;
+      case "third":
+        return <SecondRoute />;
+      case "fourth":
+        return <SecondRoute />;
+      case "fifth":
+        return <SecondRoute />;
+      case "sixth":
+        return <SecondRoute />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <BooksContainer>
+      <TabView
+        renderTabBar={(props) => <TabBar {...props} scrollEnabled />}
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+      ></TabView>
     </BooksContainer>
   );
 };

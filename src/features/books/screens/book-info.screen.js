@@ -63,6 +63,7 @@ export const BookInfoScreen = ({ route }) => {
         authors,
         publisher,
         publishedDate,
+        pageCount,
         imageLinks: { thumbnail },
       },
     },
@@ -97,10 +98,12 @@ export const BookInfoScreen = ({ route }) => {
           <Label>{publisher}</Label>
           <LabelHead>Published Date:</LabelHead>
           <Label>{publishedDate}</Label>
+          <LabelHead>Page count:</LabelHead>
+          <Label>{pageCount}</Label>
         </BookInfo>
       </DetailsContainer>
       <Chip
-        icon={"library"}
+        icon={isPresent(route.params) ? "book" : "book-outline"}
         showSelectedOverlay={true}
         selected={isPresent(route.params)}
         style={{

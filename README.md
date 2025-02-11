@@ -30,7 +30,7 @@ A **React Native** mobile app for book lovers to track their reading progress, d
 ![Home Screen](screenshots/book_trakt_list.png)  
 
 ### Book Details Screen  
-![Book Details Screen](screenshots/book_trakt_info.png)  
+![Book Details Screen](screenshots/book_tract_info.png)  
 
 
 ## 🎥 Demo Video  
